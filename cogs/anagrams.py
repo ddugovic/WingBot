@@ -341,7 +341,7 @@ class Anagrams(commands.Cog):
             ]["words"][1:]
             self.channelStates[str(channel.id)]["answer"] = word
             self.channelStates[str(channel.id)]["details"] = details
-            question = self.shuffle_word(word)
+            question = self.jumble_word(word)
             self.channelStates[str(channel.id)]["question"] = discord.Embed(
                 title=question, colour=discord.Colour.blue()
             )
@@ -435,7 +435,7 @@ class Anagrams(commands.Cog):
             elif self.channelStates[str(channel.id)]["question"].fields == []:
                 self.channelStates[str(channel.id)]["question"].add_field(
                     name="First letter",
-                    value=self.shuffle_word(self.channelStates[str(channel.id)]["answer"][0]),
+                    value=self.jumble_word(self.channelStates[str(channel.id)]["answer"][0]),
                     inline=True,
                 )
                 await channel.send(
@@ -560,15 +560,14 @@ class Anagrams(commands.Cog):
                 task.cancel()
         return
 
-    def shuffle_word(self, word):
+    def jumble_word(self, word):
         """
         Jumble word to make an anagram.
 
         Parameters:
         word (string): The word to jumble.
         """
-        word = list(word)
-        random.shuffle(word)
+        word = sorted(list(word))
         return " ".join([(":regional_indicator_%s:" % letter) for letter in word])
 
     def cleanCorpus(self):
